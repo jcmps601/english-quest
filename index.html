@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>English Quest｜期中試題闖關</title>
+<style>
+*{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#EAF5FF;color:#1E2A4A;
+  font-family:"Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none}
+button{font-family:inherit;border:none;color:inherit;background:none;outline:none}
+.fx{display:-webkit-flex;display:flex}
+.col{-webkit-flex-direction:column;flex-direction:column}
+.ctr{-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center}
+.ic{display:block}
+
+#top{position:relative;height:9vh;padding:0 2vw;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between}
+#logo{font-size:3.6vh;font-weight:900}
+#logo b{color:#FF6B5B}
+#station{background:#1E2A4A;color:#fff;border-radius:99px;padding:1vh 2.6vw 1vh 1vh;font-size:3.6vh;font-weight:800;-webkit-align-items:center;align-items:center}
+#station .tag{background:#FFC23C;color:#1E2A4A;border-radius:50%;width:5.4vh;height:5.4vh;line-height:5.4vh;text-align:center;font-size:3.2vh;margin-right:1vw}
+#station{position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}
+#thanks{font-size:2.6vh;font-weight:700;color:#5a6785;-webkit-align-items:center;align-items:center}
+#fs{background:#1E2A4A;color:#fff;border-radius:3vh;height:5.6vh;padding:0 1.6vw;font-size:2.6vh;font-weight:900;margin-left:1vw;box-shadow:0 .5vh 0 #0d1530;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center}
+#fs.on{background:#fff;color:#1E2A4A;box-shadow:0 .5vh 0 #c9d3e3,inset 0 0 0 .3vh #c9d3e3}
+.fsi{position:relative;display:inline-block;width:2.6vh;height:2.6vh;margin-right:.8vw}
+.fsi i{position:absolute;width:1vh;height:1vh;border:0 solid currentColor}
+.fsi i:nth-child(1){left:0;top:0;border-left-width:.45vh;border-top-width:.45vh}
+.fsi i:nth-child(2){right:0;top:0;border-right-width:.45vh;border-top-width:.45vh}
+.fsi i:nth-child(3){left:0;bottom:0;border-left-width:.45vh;border-bottom-width:.45vh}
+.fsi i:nth-child(4){right:0;bottom:0;border-right-width:.45vh;border-bottom-width:.45vh}
+img{-webkit-user-drag:none;user-drag:none;pointer-events:none}
+#fsTip{position:fixed;left:50%;bottom:4vh;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:rgba(30,42,74,.92);color:#fff;font-size:2.6vh;font-weight:700;padding:1.4vh 2.4vw;border-radius:2vh;display:none;z-index:50}
+
+#arena{height:91vh;padding:0 1.4vw 1.4vw}
+#panel{height:100%;border-radius:3vh;background:rgba(255,255,255,.92);border:.6vh solid #FFC23C;position:relative;overflow:hidden;
+  box-shadow:0 6px 24px rgba(30,42,74,.08);display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column}
+
+/* 首頁 */
+.home{-webkit-flex:1;flex:1}
+.stbtns{width:84%;-webkit-justify-content:center;justify-content:center}
+.stbtn{width:44%;height:42vh;margin:0 2%;border-radius:5vh;color:#fff;box-shadow:0 1.4vh 0 rgba(0,0,0,.16)}
+.stbtn .sti{font-size:13vh;line-height:1.1}
+.stbtn b{font-size:9vh;font-weight:900;margin-top:1vh}
+.stbtn small{font-size:4vh;font-weight:800;opacity:.9;margin-top:.6vh}
+.home .hero{font-size:13vh;line-height:1;-webkit-animation:bob 2.4s ease-in-out infinite;animation:bob 2.4s ease-in-out infinite}
+.home h2{font-size:6.4vh;font-weight:900;margin:1.6vh 0 1vh}
+.home .rule{font-size:3.2vh;font-weight:700;color:#5a6785;margin-bottom:3vh}
+.grades{width:84%;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-justify-content:center;justify-content:center}
+.gr{width:30%;margin:1.2vh 1.6%;height:19vh;border-radius:4vh;color:#fff;font-weight:900;line-height:1;box-shadow:0 1vh 0 rgba(0,0,0,.14)}
+.gr b{font-size:11vh}
+.gr small{font-size:3.4vh;margin-top:1vh}
+.g12{background:#22B39A} .g34{background:#3D8FE0} .g56{background:#8C6CE8}
+.gr.off{background:#c9d2de;box-shadow:none;color:#f4f6fa}
+.press{-webkit-transform:translateY(.5vh) scale(.98);transform:translateY(.5vh) scale(.98)}
+
+/* 題目 */
+.game{-webkit-flex:1;flex:1;padding:2vh 2vw 2.2vh;min-height:0}
+.bar{width:100%;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center}
+.gpill{color:#fff;font-weight:900;font-size:3.8vh;border-radius:99px;padding:.6vh 3vh}
+.try{font-size:3.8vh;font-weight:900;border-radius:99px;padding:.6vh 3vh;background:#eef2f8}
+.try.last{background:#FFE3E3;color:#E53E3E}
+.home-btn{background:#eef2f8;border-radius:99px;padding:1vh 2.6vh;font-size:3.6vh}
+.instr{font-size:3.8vh;font-weight:800;color:#5a6785;margin-top:1.4vh;text-align:center}
+.instr-big{font-size:9vh;font-weight:900;color:#1E2A4A;background:#FFF7E0;border:.6vh solid #FFC23C;border-radius:3vh;padding:3vh 5vw;text-align:center;line-height:1.3}
+.instr-big .hl{color:#E53E3E}
+.qarea{width:100%;-webkit-flex:1;flex:1;min-height:0;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;margin:1.2vh 0}
+.speak{width:17vh;height:17vh;border-radius:50%;background:#FFC23C;box-shadow:0 1vh 0 #e0a21f;font-size:8vh;line-height:17vh;text-align:center;-webkit-flex:none;flex:none}
+.speak.playing{-webkit-animation:pulse 1s ease-in-out infinite;animation:pulse 1s ease-in-out infinite}
+.stem{background:#FFF7E0;border:.5vh solid #FFC23C;border-radius:3vh;padding:2vh 3vw;font-size:5.6vh;font-weight:800;line-height:1.35;max-width:100%}
+.stem.small{font-size:4.4vh}
+.stem.big{font-size:9vh;letter-spacing:.4vh}
+.stem p{margin:.3vh 0}
+.with-speak{margin-left:3vw}
+.qimg{height:40vh;width:auto;max-width:36vw;border-radius:2vh;border:.4vh solid #e3eaf3;background:#fff;margin-right:3vw;-webkit-flex:none;flex:none}
+.note{font-size:3vh;color:#5a6785;font-weight:700;margin-top:1vh}
+.choices{width:100%;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-justify-content:center;justify-content:center}
+.ch{margin:1vh 1vw;background:#fff;border-radius:2.6vh;box-shadow:0 .9vh 0 #d5deea,inset 0 0 0 .4vh #e3eaf3;
+  font-weight:900;color:#1E2A4A;padding:1.5vh 2vw;line-height:1.25;text-align:center}
+.ch .lt{display:inline-block;width:5vh;height:5vh;line-height:5vh;border-radius:50%;background:#eef2f8;color:#5a6785;font-size:3vh;margin-right:1.4vh;vertical-align:middle;text-align:center;padding:0;text-indent:0;-webkit-flex:none;flex:none}
+.ch .in{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;width:100%}
+.ch.long .in{-webkit-box-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start}
+.ch .tx{display:block;text-align:center;-webkit-box-flex:0;-webkit-flex:0 1 auto;flex:0 1 auto;min-width:0}
+.ch.long .tx{text-align:left}
+.ch.short{-webkit-flex:1;flex:1;min-height:20vh;font-size:7vh}
+.ch.mid{-webkit-flex:1;flex:1;min-height:17vh;font-size:5vh}
+.ch.long{width:45%;min-height:12vh;font-size:4.2vh;text-align:left}
+.ch.pic{-webkit-flex:1;flex:1;padding:2vh 1vw}
+.ch.pic .lt{display:block;margin:0 auto 1.4vh}
+.oimg{max-height:34vh;height:auto;width:auto;max-width:100%;border-radius:1.5vh;vertical-align:middle}
+.ch.right{background:#dff7e8;box-shadow:0 .9vh 0 #9fdcb7,inset 0 0 0 .6vh #2EBD6B;-webkit-animation:pop .45s;animation:pop .45s}
+.ch.wrong{background:#ffe3e3;box-shadow:0 .9vh 0 #f3b0b0,inset 0 0 0 .6vh #FF5A5A;-webkit-animation:shake .45s;animation:shake .45s}
+.ch.dim{opacity:.35}
+
+/* 結果 */
+.result{-webkit-flex:1;flex:1;position:relative}
+.stamp{width:46vh;height:46vh;border-radius:50%;border:1.4vh double #FF6B5B;color:#FF6B5B;background:#fff;
+  -webkit-transform:rotate(-12deg);transform:rotate(-12deg);-webkit-animation:stampIn .55s ease-out both;animation:stampIn .55s ease-out both}
+.stamp .s1{font-size:5.4vh;font-weight:900}
+.stamp .s2{font-size:13vh;font-weight:900;line-height:1.05}
+.stamp .s3{font-size:4.2vh;font-weight:800}
+.big-msg{font-size:11vh;font-weight:900;margin:2vh 0}
+.sub-msg{font-size:5vh;font-weight:800;color:#5a6785}
+.retry{font-size:18vh;line-height:1}
+.again{margin-top:4vh;background:#FF6B5B;color:#fff;font-size:6vh;font-weight:900;border-radius:99px;padding:2vh 7vh;box-shadow:0 .8vh 0 #d9483a}
+.chance{position:absolute;left:0;top:0;right:0;bottom:0;background:rgba(255,194,60,.96);z-index:5}
+.chance div{font-size:13vh;font-weight:900}
+.chance p{font-size:5vh;font-weight:800;margin-top:2vh}
+.conf{position:absolute;top:-8vh;font-size:6vh;-webkit-animation:fall 2.6s linear forwards;animation:fall 2.6s linear forwards}
+
+#admin{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(30,42,74,.8);display:none;z-index:50}
+#admin.show{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center}
+#admin .box{background:#fff;border-radius:3vh;padding:4vh 4vw;width:64vw;font-size:2.8vh}
+#admin h3{font-size:3.6vh;margin-bottom:2vh}
+#admin table{width:100%;border-collapse:collapse;margin-bottom:2.4vh}
+#admin td,#admin th{border-bottom:1px solid #e3e8f0;padding:1.1vh;text-align:center}
+#admin .row button{background:#eef2f8;border-radius:12px;padding:1.4vh 2.4vh;font-size:2.6vh;font-weight:800;margin-right:1.4vw}
+
+@-webkit-keyframes bob{50%{-webkit-transform:translateY(-1.6vh)}} @keyframes bob{50%{transform:translateY(-1.6vh)}}
+@-webkit-keyframes pulse{50%{-webkit-transform:scale(1.08)}} @keyframes pulse{50%{transform:scale(1.08)}}
+@-webkit-keyframes pop{40%{-webkit-transform:scale(1.05)}} @keyframes pop{40%{transform:scale(1.05)}}
+@-webkit-keyframes shake{20%,60%{-webkit-transform:translateX(-1.4vh)}40%,80%{-webkit-transform:translateX(1.4vh)}}
+@keyframes shake{20%,60%{transform:translateX(-1.4vh)}40%,80%{transform:translateX(1.4vh)}}
+@-webkit-keyframes stampIn{0%{-webkit-transform:scale(2.4) rotate(-30deg);opacity:0}100%{-webkit-transform:scale(1) rotate(-12deg);opacity:1}}
+@keyframes stampIn{0%{transform:scale(2.4) rotate(-30deg);opacity:0}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+@-webkit-keyframes fall{100%{-webkit-transform:translateY(95vh) rotate(540deg)}} @keyframes fall{100%{transform:translateY(95vh) rotate(540deg)}}
+</style>
+</head>
+<body>
+<div id="top" class="fx">
+  <div id="logo">English <b>Quest</b></div>
+  <div id="station" class="fx"><span class="tag">★</span>期中試題闖關</div>
+  <div id="thanks" class="fx"><button id="fs"><span class="fsi"><i></i><i></i><i></i><i></i></span><span id="fsTxt">全螢幕</span></button></div>
+</div>
+<div id="fsTip"></div>
+<div id="arena"><section id="panel"></section></div>
+<div id="admin"><div class="box">
+  <h3 id="admTitle">闖關紀錄</h3>
+  <table><thead><tr><th>年級</th><th>挑戰人次</th><th>第 1 題過關</th><th>第 2 題過關</th><th>闖關失敗</th></tr></thead><tbody id="statBody"></tbody></table>
+  <div class="row"><button id="btnSwitch">切換關卡</button><button id="btnCsv">匯出 CSV</button><button id="btnReset">清除紀錄</button><button id="btnClose">關閉</button></div>
+</div></div>
+
+<script src="data_a1.js"></script>
+<script src="data_a2.js"></script>
+<script src="data_i1.js"></script>
+<script src="data_i2.js"></script>
+<script src="data_q.js"></script>
+<script>if (typeof BANKS === "undefined") document.write("<h1 style=\"padding:40px\">題庫載入失敗，請重新整理</h1>");</script>
+<script>
+/* =====================================================================
+   English Quest｜期中試題練習（聽力關＋閱讀關 合併版）相容版 ES5
+   入口選關卡：選定後記在這台大屏，之後一打開就直接進該關卡
+   換關卡：連按左上角 English Quest 5 下 →「切換關卡」；或網址加 #listen / #read
+   題目來源：各年級期中試卷題庫（聽力題使用試卷原版錄音）
+   規則：選年級 → 答對 1 題過關；答錯換 1 題再答；再錯闖關失敗、換下一位
+   紀錄：左上角 English Quest 連按 5 下
+   ===================================================================== */
+var GNAME = ['', '一年級', '二年級', '三年級', '四年級', '五年級', '六年級'];
+var GCOLOR = ['', '#22B39A', '#22B39A', '#3D8FE0', '#3D8FE0', '#8C6CE8', '#8C6CE8'];
+var IDLE_MS = 45000;
+function $(id) { return document.getElementById(id); }
+function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+/* ---------- 聲音 ---------- */
+var player = new Audio();
+function playClip(src, onend) {
+  if (!src) { if (onend) onend(); return; }
+  try { player.pause(); } catch (e) {}
+  player.onended = function () { if (onend) onend(); };
+  player.src = src;
+  var p = player.play();
+  if (p && p['catch']) p['catch'](function () { if (onend) onend(); });
+}
+var actx = null;
+function unlockAudio() { try { if (!actx) { var C = window.AudioContext || window.webkitAudioContext; if (C) actx = new C(); } if (actx && actx.resume) actx.resume(); } catch (e) {} }
+function beep(seq) {
+  try {
+    if (!actx) return;
+    var t = actx.currentTime;
+    for (var i = 0; i < seq.length; i++) {
+      var o = actx.createOscillator(), g = actx.createGain ? actx.createGain() : actx.createGainNode();
+      o.type = seq[i][2] || 'sine'; o.frequency.value = seq[i][0];
+      g.gain.setValueAtTime(seq[i][3] || 0.18, t); g.gain.exponentialRampToValueAtTime(0.001, t + seq[i][1]);
+      o.connect(g); g.connect(actx.destination);
+      if (o.start) { o.start(t); o.stop(t + seq[i][1]); } else { o.noteOn(t); o.noteOff(t + seq[i][1]); }
+      t += seq[i][1] * 0.85;
+    }
+  } catch (e) {}
+}
+var SFX = {
+  ok: function () { beep([[880, 0.12], [1320, 0.22]]); },
+  no: function () { beep([[220, 0.18, 'square', 0.08], [180, 0.25, 'square', 0.08]]); },
+  pass: function () { beep([[523, 0.14], [659, 0.14], [784, 0.14], [1047, 0.4]]); },
+  fail: function () { beep([[392, 0.2, 'triangle', 0.12], [330, 0.2, 'triangle', 0.12], [262, 0.4, 'triangle', 0.12]]); },
+  tap: function () { beep([[660, 0.05, 'triangle', 0.08]]); }
+};
+
+/* ---------- 紀錄 ---------- */
+var KEY = '', STATION = null, BANK = {};
+var SAVE_ST = 'englishQuestExam_station';
+function setStation(m) {
+  STATION = STATIONS[m]; BANK = BANKS[m]; KEY = 'englishQuestExam_' + STATION.key;
+  $('station').innerHTML = '<span class="tag">' + STATION.tag + '</span>' + STATION.title;
+  $('panel').style.borderColor = STATION.color;
+  $('admTitle').innerHTML = STATION.title + '｜闖關紀錄';
+  document.title = 'English Quest｜' + STATION.title;
+  try { localStorage.setItem(SAVE_ST, m); } catch (e) {}
+}
+function chooser() {
+  clearTimers(); G.state = 'choose'; STATION = null;
+  try { player.pause(); } catch (e) {}
+  $('station').innerHTML = '<span class="tag">★</span>期中試題闖關';
+  $('panel').style.borderColor = '#FFC23C';
+  var b = '', ms = ['listen', 'read'];
+  for (var i = 0; i < ms.length; i++) {
+    var s = STATIONS[ms[i]];
+    b += '<button class="stbtn fx col ctr" data-m="' + ms[i] + '" style="background:' + s.color + '"><span class="sti">' + s.icon + '</span><b>' + s.short + '</b><small>' + s.en + '</small></button>';
+  }
+  root.innerHTML = '<div class="home fx col ctr"><h2>請選擇這台大屏的關卡</h2>' +
+    '<div class="rule">選好後會固定在這個關卡；要換關卡請連按左上角 English Quest 5 下</div><div class="stbtns fx">' + b + '</div></div>';
+  eachSel(root, '.stbtn', function (el) {
+    tap(el, function () { unlockAudio(); SFX.tap(); setStation(el.getAttribute('data-m')); home(); });
+  });
+}
+function loadStats() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+function bump(g, f) { var s = loadStats(); if (!s[g]) s[g] = { play: 0, pass1: 0, pass2: 0, fail: 0 }; s[g][f]++; try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+
+/* ---------- 觸控 ---------- */
+var touched = false;
+function tap(el, fn) {
+  el.addEventListener('touchstart', function (e) { touched = true; el._tt = true; el.classList.add('press'); if (e.cancelable) e.preventDefault(); }, false);
+  el.addEventListener('touchend', function (e) { if (e.cancelable) e.preventDefault(); el.classList.remove('press'); if (el._tt) { el._tt = false; fn(); } }, false);
+  el.addEventListener('touchcancel', function () { el._tt = false; el.classList.remove('press'); }, false);
+  el.addEventListener('click', function () { if (!touched) fn(); }, false);
+}
+function eachSel(root, sel, fn) { var l = root.querySelectorAll(sel); for (var i = 0; i < l.length; i++) fn(l[i], i); }
+
+/* ---------- 流程 ---------- */
+var root = $('panel');
+var G = { state: 'home' };
+function clearTimers() { clearTimeout(G.timer); clearTimeout(G.idle); }
+function poke() { clearTimeout(G.idle); if (G.state !== 'home') G.idle = setTimeout(home, IDLE_MS); }
+document.addEventListener('touchstart', poke, false);
+document.addEventListener('mousedown', poke, false);
+
+function home() {
+  clearTimers(); G.state = 'home';
+  try { player.pause(); } catch (e) {}
+  var b = '';
+  var ORDER = [1, 3, 5, 2, 4, 6];
+  for (var oi = 0; oi < ORDER.length; oi++) {
+    var g = ORDER[oi];
+    var has = BANK[g] && BANK[g].length;
+    b += '<button class="gr fx col ctr ' + (has ? (g < 3 ? 'g12' : g < 5 ? 'g34' : 'g56') : 'off') + '" data-g="' + g + '"><b>' + g + '</b><small>' + (has ? '年級' : '準備中') + '</small></button>';
+  }
+  root.innerHTML = '<div class="home fx col ctr"><div class="hero">' + STATION.icon + '</div><h2>' + STATION.title + '</h2>' +
+    '<div class="rule">期中試題練習・答對 1 題過關・答錯還有 1 次機會</div><div class="grades fx">' + b + '</div></div>';
+  eachSel(root, '.gr', function (el) {
+    var g = +el.getAttribute('data-g');
+    if (BANK[g] && BANK[g].length) tap(el, function () { if (!isFull()) enterFull(); unlockAudio(); SFX.tap(); start(g); });
+  });
+}
+function start(g) {
+  clearTimers(); G.grade = g; G.used = {}; G.attempt = 1; G.state = 'game'; G.lastSec = undefined;
+  bump(g, 'play'); poke(); G.q = nextQ(); render(true);
+}
+function nextQ() {
+  var all = BANK[G.grade], pool = [], i;
+  for (i = 0; i < all.length; i++) if (!G.used[i]) pool.push(i);
+  if (!pool.length) pool = all.map(function (x, k) { return k; });
+  /* 第二次機會盡量換不同題型 */
+  if (G.lastSec !== undefined) {
+    var other = pool.filter(function (k) { return all[k].s !== G.lastSec; });
+    if (other.length) pool = other;
+  }
+  var k = pick(pool); G.used[k] = true; G.lastSec = all[k].s;
+  return all[k];
+}
+function fitImg(im) {
+  var p = im.parentNode, w = im.naturalWidth || im.width, h = im.naturalHeight || im.height;
+  if (!p || !w || !h) return;
+  var maxW = p.clientWidth * 0.86, maxH = (window.innerHeight || document.documentElement.clientHeight) * 0.34;
+  var r = Math.min(maxW / w, maxH / h);
+  im.style.maxWidth = 'none'; im.style.maxHeight = 'none';
+  im.style.width = Math.round(w * r) + 'px'; im.style.height = Math.round(h * r) + 'px';
+}
+function stemHTML(q) {
+  if (!q.stem) return '';
+  var lines = q.stem.split('\n'), h = '';
+  for (var i = 0; i < lines.length; i++) h += '<p>' + esc(lines[i]) + '</p>';
+  var cls = q.stem.length <= 14 && lines.length === 1 ? ' big' : q.stem.length > 70 ? ' small' : '';
+  return '<div class="stem' + cls + (STATION.mode === 'listen' ? ' with-speak' : '') + '">' + h + (q.note ? '<div class="note">＊' + esc(q.note) + '</div>' : '') + '</div>';
+}
+function render(now) {
+  G.locked = false;
+  var q = G.q, maxLen = 0, i, cls, opts = '';
+  for (i = 0; i < q.o.length; i++) maxLen = Math.max(maxLen, q.o[i].length);
+  cls = maxLen <= 6 ? 'short' : maxLen <= 16 ? 'mid' : 'long';
+  for (i = 0; i < q.o.length; i++) {
+    if (q.oi) opts += '<button class="ch pic" data-k="' + i + '"><span class="lt">' + 'ABCD'.charAt(i) + '</span><img class="oimg" onload="fitImg(this)" src="' + IMGS[q.oi[i]] + '" alt=""></button>';
+    else opts += '<button class="ch ' + cls + '" data-k="' + i + '"><span class="in"><span class="lt">' + 'ABCD'.charAt(i) + '</span><span class="tx">' + esc(q.o[i]) + '</span></span></button>';
+  }
+  var qa = '';
+  if (STATION.mode === 'listen') qa = '<button class="speak">🔊</button>' + (q.img ? '<img class="qimg" src="' + IMGS[q.img] + '" alt="">' : '') + stemHTML(q);
+  else qa = (q.img ? '<img class="qimg" src="' + IMGS[q.img] + '" alt="">' : '') + stemHTML(q);
+  /* 沒有題幹也沒有圖的題目（例如「選出不同主題的單字」）：把題目說明放大置中 */
+  var bigInstr = STATION.mode === 'read' && !q.stem && !q.img;
+  if (bigInstr) qa = '<div class="instr-big">' + esc(q.i).replace('不同主題', '<span class="hl">不同主題</span>').replace('「不同類型」', '<span class="hl">不同類型</span>') + '</div>';
+  root.innerHTML = '<div class="game fx col">' +
+    '<div class="bar fx"><span class="gpill" style="background:' + GCOLOR[G.grade] + '">' + GNAME[G.grade] + '</span>' +
+    '<span class="try' + (G.attempt === 2 ? ' last' : '') + '">' + (G.attempt === 1 ? '第 1 次' : '最後 1 次機會') + '</span>' +
+    '<button class="home-btn">🏠</button></div>' +
+    (bigInstr ? '' : '<div class="instr">' + esc(q.i) + '</div>') +
+    '<div class="qarea fx">' + qa + '</div>' +
+    '<div class="choices fx">' + opts + '</div></div>';
+  tap(root.querySelector('.home-btn'), home);
+  eachSel(root, '.ch', function (b) { tap(b, function () { answer(+b.getAttribute('data-k')); }); });
+  if (STATION.mode === 'listen') {
+    var sp = root.querySelector('.speak');
+    var play = function () { sp.classList.add('playing'); playClip(AUDIO[q.au], function () { sp.classList.remove('playing'); }); };
+    tap(sp, play);
+    if (now) play(); else G.timer = setTimeout(play, 400);
+  }
+}
+function answer(k) {
+  if (G.locked) return; G.locked = true;
+  try { player.pause(); } catch (e) {}
+  var q = G.q, ok = k === q.a;
+  eachSel(root, '.ch', function (b, j) { if (j === q.a) b.classList.add('right'); else if (j === k) b.classList.add('wrong'); else b.classList.add('dim'); });
+  if (ok) SFX.ok(); else SFX.no();
+  G.timer = setTimeout(function () { outcome(ok); }, ok ? 900 : 2200);
+}
+function outcome(ok) {
+  if (ok) return passScreen();
+  if (G.attempt === 1) {
+    G.attempt = 2;
+    var ov = document.createElement('div'); ov.className = 'chance fx col ctr';
+    ov.innerHTML = '<div>再一次機會！</div><p>換一題，加油！</p>';
+    root.appendChild(ov);
+    G.timer = setTimeout(function () { G.q = nextQ(); render(false); }, 1600);
+    return;
+  }
+  failScreen();
+}
+function passScreen() {
+  G.state = 'result'; bump(G.grade, G.attempt === 1 ? 'pass1' : 'pass2'); SFX.pass();
+  root.innerHTML = '<div class="result fx col ctr"><div class="stamp fx col ctr"><div class="s1">' + STATION.short + '</div><div class="s2">PASS</div>' +
+    '<div class="s3">★ ' + GNAME[G.grade] + ' ★</div></div><button class="again">下一位 ▶</button></div>';
+  var box = root.querySelector('.result'), em = ['🎉', '⭐', '✨', '🎊'];
+  for (var n = 0; n < 22; n++) {
+    var c = document.createElement('div'); c.className = 'conf'; c.innerHTML = pick(em);
+    c.style.left = (Math.random() * 96) + '%';
+    c.style.webkitAnimationDelay = c.style.animationDelay = (Math.random() * 0.7) + 's';
+    c.style.webkitAnimationDuration = c.style.animationDuration = (1.8 + Math.random() * 1.6) + 's';
+    box.appendChild(c);
+  }
+  tap(root.querySelector('.again'), home);
+  G.timer = setTimeout(home, 9000);
+}
+function failScreen() {
+  G.state = 'result'; bump(G.grade, 'fail'); SFX.fail();
+  root.innerHTML = '<div class="result fx col ctr"><div class="retry">💪</div><div class="big-msg">闖關失敗</div>' +
+    '<div class="sub-msg">下次再挑戰，換下一位囉！</div><button class="again">下一位 ▶</button></div>';
+  tap(root.querySelector('.again'), home);
+  G.timer = setTimeout(home, 7000);
+}
+
+/* ---------- 其他 ---------- */
+function isFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement || document.webkitIsFullScreen || document.mozFullScreenElement || document.msFullscreenElement); }
+function enterFull() {
+  var d = document.documentElement, req = d.requestFullscreen || d.webkitRequestFullscreen || d.webkitRequestFullScreen || d.mozRequestFullScreen || d.msRequestFullscreen;
+  if (!req) { showTip('這台大屏的瀏覽器不支援自動全螢幕，請用瀏覽器選單的「全螢幕」'); return; }
+  try { var r = req.call(d); if (r && r['catch']) r['catch'](function () {}); } catch (e) {}
+}
+function exitFull() {
+  var ex = document.exitFullscreen || document.webkitExitFullscreen || document.webkitCancelFullScreen || document.mozCancelFullScreen || document.msExitFullscreen;
+  try { if (ex) { var r = ex.call(document); if (r && r['catch']) r['catch'](function () {}); } } catch (e) {}
+}
+function syncFs() {
+  var on = isFull(); $('fs').className = on ? 'on' : ''; $('fsTxt').innerHTML = on ? '離開全螢幕' : '全螢幕';
+}
+var tipT = null;
+function showTip(t) { var el = $('fsTip'); el.innerHTML = t; el.style.display = 'block'; clearTimeout(tipT); tipT = setTimeout(function () { el.style.display = 'none'; }, 4000); }
+tap($('fs'), function () { if (isFull()) exitFull(); else enterFull(); setTimeout(syncFs, 400); });
+var fsEv = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
+for (var fi = 0; fi < fsEv.length; fi++) document.addEventListener(fsEv[fi], syncFs, false);
+syncFs();
+/* 鎖定右鍵／長按選單、選取、拖曳、縮放 */
+function block(e) { e = e || window.event; if (e.preventDefault) e.preventDefault(); e.returnValue = false; return false; }
+document.addEventListener('contextmenu', block, false);
+document.oncontextmenu = block; window.oncontextmenu = block;
+document.addEventListener('selectstart', block, false);
+document.addEventListener('dragstart', block, false);
+document.addEventListener('gesturestart', block, false);
+document.addEventListener('mousedown', function (e) { if (e.button === 2) block(e); }, false);
+document.addEventListener('keydown', function (e) { var k = e.keyCode; if (k === 123 || (e.ctrlKey && (k === 83 || k === 85 || k === 80))) block(e); }, false);
+var logoTaps = 0, logoT = null;
+tap($('logo'), function () { logoTaps++; clearTimeout(logoT); logoT = setTimeout(function () { logoTaps = 0; }, 1500); if (logoTaps >= 5) { logoTaps = 0; openAdmin(); } });
+function openAdmin() {
+  var s = loadStats(), h = '';
+  for (var g = 1; g <= 6; g++) { var r = s[g] || {}; h += '<tr><td>' + GNAME[g] + '</td><td>' + (r.play || 0) + '</td><td>' + (r.pass1 || 0) + '</td><td>' + (r.pass2 || 0) + '</td><td>' + (r.fail || 0) + '</td></tr>'; }
+  $('statBody').innerHTML = h; $('admin').classList.add('show');
+}
+tap($('btnClose'), function () { $('admin').classList.remove('show'); });
+tap($('btnSwitch'), function () { $('admin').classList.remove('show'); try { localStorage.removeItem(SAVE_ST); } catch (e) {} chooser(); });
+tap($('btnReset'), function () { try { localStorage.removeItem(KEY); } catch (e) {} openAdmin(); });
+tap($('btnCsv'), function () {
+  if (!STATION) return;
+  var s = loadStats(), rows = ['station,grade,plays,pass_first,pass_second,fail'];
+  for (var g = 1; g <= 6; g++) { var r = s[g] || {}; rows.push(STATION.key + ',' + g + ',' + (r.play || 0) + ',' + (r.pass1 || 0) + ',' + (r.pass2 || 0) + ',' + (r.fail || 0)); }
+  var blob = new Blob(['﻿' + rows.join('\n')], { type: 'text/csv' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'EnglishQuest_' + STATION.key + '_' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+});
+(function () {
+  var m = null, h = (location.hash || '').replace('#', ''), q = location.search || '';
+  if (h === 'listen' || h === 'read') m = h;
+  else if (/station=(listen|read)/.test(q)) m = q.match(/station=(listen|read)/)[1];
+  else { try { m = localStorage.getItem(SAVE_ST); } catch (e) {} }
+  if (m === 'listen' || m === 'read') { setStation(m); home(); } else chooser();
+})();
+</script>
+</body>
+</html>
