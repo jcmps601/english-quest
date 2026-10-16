@@ -139,16 +139,16 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:none}
 <div id="arena"><section id="panel"></section></div>
 <div id="admin"><div class="box">
   <h3 id="admTitle">闖關紀錄</h3>
-  <table><thead><tr><th>年級</th><th>挑戰人次</th><th>第 1 題過關</th><th>第 2 題過關</th><th>闖關失敗</th></tr></thead><tbody id="statBody"></tbody></table>
+  <table><thead><tr><th>年級</th><th>挑戰人次</th><th>過關</th><th>闖關失敗</th></tr></thead><tbody id="statBody"></tbody></table>
   <div class="row"><button id="btnSwitch">切換關卡</button><button id="btnCsv">匯出 CSV</button><button id="btnReset">清除紀錄</button><button id="btnClose">關閉</button></div>
 </div></div>
 
 </div>
-<script src="data_a1.js"></script>
-<script src="data_a2.js"></script>
-<script src="data_i1.js"></script>
-<script src="data_i2.js"></script>
-<script src="data_q.js"></script>
+<script src="data_a1.js?v=202610161610"></script>
+<script src="data_a2.js?v=202610161610"></script>
+<script src="data_i1.js?v=202610161610"></script>
+<script src="data_i2.js?v=202610161610"></script>
+<script src="data_q.js?v=202610161610"></script>
 <script>if (typeof BANKS === "undefined") document.write("<h1 style=\"padding:40px\">題庫載入失敗，請重新整理</h1>");</script>
 <script>
 /* =====================================================================
@@ -259,7 +259,7 @@ function home() {
     b += '<button class="gr fx col ctr ' + (has ? (g < 3 ? 'g12' : g < 5 ? 'g34' : 'g56') : 'off') + '" data-g="' + g + '"><b>' + g + '</b><small>' + (has ? '年級' : '準備中') + '</small></button>';
   }
   root.innerHTML = '<div class="home fx col ctr"><div class="hero">' + STATION.icon + '</div><h2>' + STATION.title + '</h2>' +
-    '<div class="rule">期中試題練習・答對 1 題過關・答錯還有 1 次機會</div><div class="grades fx">' + b + '</div></div>';
+    '<div class="rule">期中試題練習・每人 1 題・答對就過關</div><div class="grades fx">' + b + '</div></div>';
   eachSel(root, '.gr', function (el) {
     var g = +el.getAttribute('data-g');
     if (BANK[g] && BANK[g].length) tap(el, function () { if (!isFull()) enterFull(); unlockAudio(); SFX.tap(); start(g); });
@@ -313,7 +313,7 @@ function render(now) {
   if (bigInstr) qa = '<div class="instr-big">' + esc(q.i).replace('不同主題', '<span class="hl">不同主題</span>').replace('「不同類型」', '<span class="hl">不同類型</span>') + '</div>';
   root.innerHTML = '<div class="game fx col">' +
     '<div class="bar fx"><span class="gpill" style="background:' + GCOLOR[G.grade] + '">' + GNAME[G.grade] + '</span>' +
-    '<span class="try' + (G.attempt === 2 ? ' last' : '') + '">' + (G.attempt === 1 ? '第 1 次' : '最後 1 次機會') + '</span>' +
+    '<span class="try">只有 1 次機會</span>' +
     '<button class="home-btn">🏠</button></div>' +
     (bigInstr ? '' : '<div class="instr">' + esc(q.i) + '</div>') +
     '<div class="qarea fx">' + qa + '</div>' +
@@ -337,14 +337,6 @@ function answer(k) {
 }
 function outcome(ok) {
   if (ok) return passScreen();
-  if (G.attempt === 1) {
-    G.attempt = 2;
-    var ov = document.createElement('div'); ov.className = 'chance fx col ctr';
-    ov.innerHTML = '<div>再一次機會！</div><p>換一題，加油！</p>';
-    root.appendChild(ov);
-    G.timer = setTimeout(function () { G.q = nextQ(); render(false); }, 1600);
-    return;
-  }
   failScreen();
 }
 function passScreen() {
@@ -403,7 +395,7 @@ var logoTaps = 0, logoT = null;
 tap($('logo'), function () { logoTaps++; clearTimeout(logoT); logoT = setTimeout(function () { logoTaps = 0; }, 1500); if (logoTaps >= 5) { logoTaps = 0; openAdmin(); } });
 function openAdmin() {
   var s = loadStats(), h = '';
-  for (var g = 1; g <= 6; g++) { var r = s[g] || {}; h += '<tr><td>' + GNAME[g] + '</td><td>' + (r.play || 0) + '</td><td>' + (r.pass1 || 0) + '</td><td>' + (r.pass2 || 0) + '</td><td>' + (r.fail || 0) + '</td></tr>'; }
+  for (var g = 1; g <= 6; g++) { var r = s[g] || {}; h += '<tr><td>' + GNAME[g] + '</td><td>' + (r.play || 0) + '</td><td>' + ((r.pass1 || 0) + (r.pass2 || 0)) + '</td><td>' + (r.fail || 0) + '</td></tr>'; }
   $('statBody').innerHTML = h; $('admin').classList.add('show');
 }
 tap($('btnClose'), function () { $('admin').classList.remove('show'); });
@@ -411,8 +403,8 @@ tap($('btnSwitch'), function () { $('admin').classList.remove('show'); try { loc
 tap($('btnReset'), function () { try { localStorage.removeItem(KEY); } catch (e) {} openAdmin(); });
 tap($('btnCsv'), function () {
   if (!STATION) return;
-  var s = loadStats(), rows = ['station,grade,plays,pass_first,pass_second,fail'];
-  for (var g = 1; g <= 6; g++) { var r = s[g] || {}; rows.push(STATION.key + ',' + g + ',' + (r.play || 0) + ',' + (r.pass1 || 0) + ',' + (r.pass2 || 0) + ',' + (r.fail || 0)); }
+  var s = loadStats(), rows = ['station,grade,plays,pass,fail'];
+  for (var g = 1; g <= 6; g++) { var r = s[g] || {}; rows.push(STATION.key + ',' + g + ',' + (r.play || 0) + ',' + ((r.pass1 || 0) + (r.pass2 || 0)) + ',' + (r.fail || 0)); }
   var blob = new Blob(['﻿' + rows.join('\n')], { type: 'text/csv' });
   var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'EnglishQuest_' + STATION.key + '_' + new Date().toISOString().slice(0, 10) + '.csv';
